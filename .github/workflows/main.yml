@@ -17,19 +17,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build AAB Automatically
+      - name: Build AAB with System Gradle
         run: |
-          # Encontra o diretório onde está o arquivo gradlew
-          GRADLEW_FILE=$(find . -name gradlew -type f | head -n 1)
-          if [ -z "$GRADLEW_FILE" ]; then
-            echo "Arquivo gradlew nao encontrado no repositorio!"
+          BUILD_DIR=$(find . -name "build.gradle*" -exec dirname {} \; | head -n 1)
+          if [ -z "$BUILD_DIR" ]; then
+            echo "Nenhum arquivo de build encontrado!"
             exit 1
           fi
-          TARGET_DIR=$(dirname "$GRADLEW_FILE")
-          echo "Projeto encontrado em: $TARGET_DIR"
-          cd "$TARGET_DIR"
-          chmod +x gradlew
-          ./gradlew bundleRelease || ./gradlew bundle
+          cd "$BUILD_DIR"
+          gradle bundleRelease || gradle bundle
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
