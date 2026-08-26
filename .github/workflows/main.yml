@@ -17,14 +17,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Build Release AAB
-        run: ./gradlew bundleRelease || ./gradlew bundle
+      - name: Build AAB Automatically
+        run: |
+          # Encontra o diretório onde está o arquivo gradlew
+          GRADLEW_FILE=$(find . -name gradlew -type f | head -n 1)
+          if [ -z "$GRADLEW_FILE" ]; then
+            echo "Arquivo gradlew nao encontrado no repositorio!"
+            exit 1
+          fi
+          TARGET_DIR=$(dirname "$GRADLEW_FILE")
+          echo "Projeto encontrado em: $TARGET_DIR"
+          cd "$TARGET_DIR"
+          chmod +x gradlew
+          ./gradlew bundleRelease || ./gradlew bundle
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: app/build/outputs/bundle/**/*.aab
+          path: '**/*.aab'
