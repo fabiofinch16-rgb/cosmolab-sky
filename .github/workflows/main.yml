@@ -19,18 +19,12 @@ jobs:
 
       - name: Grant permissions and Build AAB
         run: |
-          GRADLEW_PATH=$(find . -name gradlew -type f | head -n 1)
-          if [ -z "$GRADLEW_PATH" ]; then
-            echo "gradlew não encontrado"
-            exit 1
-          fi
-          PROJECT_DIR=$(dirname "$GRADLEW_PATH")
-          cd "$PROJECT_DIR"
-          chmod +x gradlew
+          cd cosmolab-céu || true
+          chmod +x gradlew || true
           ./gradlew bundleRelease || ./gradlew bundle
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: '**/*.aab'
+          path: '**/app/build/outputs/bundle/**/*.aab'
