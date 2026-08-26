@@ -17,14 +17,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Grant permissions and Build AAB
-        run: |
-          cd cosmolab-céu || true
-          chmod +x gradlew || true
-          ./gradlew bundleRelease || ./gradlew bundle
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease || ./gradlew bundle
 
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: '**/app/build/outputs/bundle/**/*.aab'
+          path: app/build/outputs/bundle/**/*.aab
