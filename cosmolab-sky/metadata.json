@@ -1,0 +1,6 @@
+{
+  "name": "CosmoLab Sky",
+  "description": "Guia astronômico inteligente para observação dos planetas, objetos de céu profundo e chuvas de meteoros.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
