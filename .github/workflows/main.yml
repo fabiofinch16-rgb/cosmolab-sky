@@ -17,17 +17,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build AAB
+      - name: Locate and Build AAB
         run: |
-          # Encontra a pasta raiz real do projeto Android (onde está o settings.gradle)
-          SETTINGS_FILE=$(find . -name "settings.gradle*" -type f | head -n 1)
-          if [ -z "$SETTINGS_FILE" ]; then
-            echo "settings.gradle nao encontrado!"
-            exit 1
+          # Procura a pasta mais profunda onde realmente está a estrutura do Gradle
+          TARGET_DIR=$(find . -name "settings.gradle*" -exec dirname {} \; | tail -n 1)
+          if [ -z "$TARGET_DIR" ]; then
+            TARGET_DIR=$(find . -name "build.gradle*" -exec dirname {} \; | tail -n 1)
           fi
-          PROJECT_ROOT=$(dirname "$SETTINGS_FILE")
-          echo "Entrando na pasta do projeto: $PROJECT_ROOT"
-          cd "$PROJECT_ROOT"
+          echo "Entrando na pasta do projeto: $TARGET_DIR"
+          cd "$TARGET_DIR"
           gradle bundleRelease || gradle bundle
 
       - name: Upload AAB Artifact
